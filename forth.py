@@ -56,7 +56,7 @@ def execute(program, debug=False):
 		else:
 			actions = dictionary[command]
 			
-			program = program[:pointer+1] + actions + program[pointer+1:]
+			program = program[:pointer] + actions + program[pointer+1:]
 			
 		if debug:
 			print("STACK", stack)
