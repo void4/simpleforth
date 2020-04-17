@@ -5,6 +5,25 @@ def is_number(s):
 	except ValueError:
 		return False
 
+def find_nth(l, x, s=0, inc=None, n=0):
+
+	if inc is None:
+		inc = []
+
+	i = s
+	while i < len(l):
+		if l[i] == x:
+			if n == 0:
+				return i
+			n -= 1
+
+		elif l[i] in inc:
+			n += 1
+
+		i += 1
+
+	return -1
+
 def execute(program, debug=False):
 	stack = []
 	dictionary = {}
@@ -74,17 +93,18 @@ def execute(program, debug=False):
 		elif command == "if":
 			truth = pop()
 			if not truth:
-				elseindex = program.index("else", pointer)
-				thenindex = program.index("then", pointer)
+				elseindex = find_nth(program, "else", pointer, ["if"])
+				thenindex = find_nth(program, "then", pointer, ["if"])
 				if elseindex != -1 and elseindex < thenindex:
 					# Pointer increased by 1 more at the end of loop
 					pointer = elseindex
-				else:
+				elif thenindex != -1:
 					pointer = thenindex
 
 		elif command == "else":
-			thenindex = program.index("then", pointer)
-			pointer = thenindex
+			thenindex = find_nth(program, "then", pointer, ["if"])
+			if thenindex != -1:
+				pointer = thenindex
 
 		elif command == "then":
 			pass
